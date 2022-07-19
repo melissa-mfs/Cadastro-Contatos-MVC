@@ -1,6 +1,9 @@
+using Contatos_MVC.Data;
+using Contatos_MVC.Data.Repositorio;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +27,12 @@ namespace Contatos_MVC
         public void ConfigureServices(IServiceCollection services)
         { 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            
+            //Conectando banco de dados (string de conn no appsettings)
+            services.AddEntityFrameworkSqlServer().AddDbContext<BancoContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DataBase")));
+
+            //Toda vez que chamar a Interface, será chamado as biblioteca de classe ContatoRepositorio
+            services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
